@@ -29,7 +29,9 @@ arrow-array = "53.0"
 wgpu = "23.0"
 egui = "0.29"
 egui-wgpu = "0.29"
+eframe = "0.29"
 winit = "0.30"
+pollster = "0.3"
 
 # Utilidades y Logs
 thiserror = "2.0"
