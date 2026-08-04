@@ -1,0 +1,15 @@
+[package]
+name = "teraplot-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+memmap2 = { workspace = true }
+bytemuck = { workspace = true }
+rayon = { workspace = true }
+arrow-array = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+crossbeam-channel = { workspace = true }

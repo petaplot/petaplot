@@ -1,0 +1,45 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/teraplot-core",
+    "crates/teraplot-render",
+    "crates/teraplot-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Fidel Echevarria <contact@teraplot.dev>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/teraplot/teraplot"
+homepage = "https://teraplot.dev"
+
+[workspace.dependencies]
+# Internas
+teraplot-core = { path = "crates/teraplot-core" }
+teraplot-render = { path = "crates/teraplot-render" }
+
+# Rendimiento e I/O
+memmap2 = "0.9"
+bytemuck = { version = "1.18", features = ["derive"] }
+rayon = "1.10"
+arrow-array = "53.0"
+
+# Gráficos y UI
+wgpu = "23.0"
+egui = "0.29"
+egui-wgpu = "0.29"
+winit = "0.30"
+
+# Utilidades y Logs
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+crossbeam-channel = "0.5"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
