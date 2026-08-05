@@ -3,7 +3,7 @@ resolver = "2"
 members = [
     "crates/petaplot-core",
     "crates/petaplot-render",
-    "crates/petaplot-cli",
+    "crates/petaplot",
 ]
 
 [workspace.package]

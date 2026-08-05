@@ -142,7 +142,7 @@ petaplot/
 │   │       └── shaders/
 │   │           ├── line.wgsl
 │   │           └── grid.wgsl
-│   └── petaplot-cli/
+│   └── petaplot/
 │       ├── Cargo.toml
 │       └── src/
 │           ├── main.rs
@@ -169,7 +169,7 @@ resolver = "2"
 members = [
     "crates/petaplot-core",
     "crates/petaplot-render",
-    "crates/petaplot-cli",
+    "crates/petaplot",
 ]
 
 [workspace.package]
@@ -293,7 +293,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 # PetaPlot
 
 [![CI Status](https://github.com/petaplot/petaplot/workflows/CI/badge.svg)](https://github.com/petaplot/petaplot/actions)
-[![Crates.io](https://img.shields.io/crates/v/petaplot-cli.svg)](https://crates.io/crates/petaplot-cli)
+[![Crates.io](https://img.shields.io/crates/v/petaplot.svg)](https://crates.io/crates/petaplot)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](#license)
 
 > **PetaPlot** is an open-source, ultra-fast time-series visualizer engineered for terabyte-scale datasets.
@@ -310,7 +310,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
 ```bash
 # Install via Cargo
-cargo install petaplot-cli
+cargo install petaplot
 
 # Open a massive time-series file
 petaplot telemetry_data.arrow
@@ -323,7 +323,7 @@ PetaPlot is built as a modular Cargo Workspace:
 
 * `petaplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
 * `petaplot-render`: Low-level `wgpu` rendering pipelines and instance buffers.
-* `petaplot-cli`: Cross-platform desktop application built with `egui`.
+* `petaplot`: Cross-platform desktop application built with `egui`.
 
 ## License
 
@@ -342,7 +342,7 @@ at your option.
 
 1. **Fase 1 (Core & Storage):** Implementar `petaplot-core` con la abstracción `mmap`, pruebas unitarias de decimación SIMD en `rayon` y benchmarks de velocidad de lectura con `criterion`.
 2. **Fase 2 (Pipeline de Renderizado):** Crear `petaplot-render` configurando `wgpu`, el shader WGSL para instanciado de líneas y el buffer uniforme de cámara.
-3. **Fase 3 (UI & Integración CLI):** Desarrollar `petaplot-cli` integrando `egui` y coordinando los hilos de I/O y renderizado a través de canales de mensajes `crossbeam-channel`.
+3. **Fase 3 (UI & Integración CLI):** Desarrollar `petaplot` integrando `egui` y coordinando los hilos de I/O y renderizado a través de canales de mensajes `crossbeam-channel`.
 4. **Fase 4 (CI/CD):** Configurar GitHub Actions en `.github/workflows/` para compilación y empaquetado automático de binarios en Linux (`.deb`), macOS (`.dmg`) y Windows (`.exe`).
 
 <Elicitation label="Generar la configuración de CI/CD para GitHub Actions" query="Escribe el archivo .github/workflows/ci.yml para compilar y testear PetaPlot automáticamente en Linux, macOS y Windows."/>

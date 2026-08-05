@@ -1,5 +1,5 @@
 [package]
-name = "petaplot-cli"
+name = "petaplot"
 description = "Cross-platform desktop application for PetaPlot time-series visualizer."
 version.workspace = true
 edition.workspace = true

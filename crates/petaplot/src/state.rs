@@ -5,7 +5,7 @@ use petaplot_core::lod::builder::LodBuilder;
 use petaplot_core::lod::pyramid::LodPyramid;
 use petaplot_render::camera::ViewportCamera;
 
-/// Estado global de la aplicación `petaplot-cli`.
+/// Estado global de la aplicación `petaplot`.
 pub struct AppState {
     pub file_path: Option<PathBuf>,
     pub pyramid: Option<LodPyramid>,

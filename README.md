@@ -19,16 +19,16 @@ PetaPlot is structured as a Rust Workspace (Edition 2024):
 
 * `crates/petaplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
 * `crates/petaplot-render`: Low-level `wgpu` rendering pipelines, camera uniform buffers, and WGSL line shaders.
-* `crates/petaplot-cli`: Cross-platform desktop application built with `egui`.
+* `crates/petaplot`: Cross-platform desktop application built with `egui`.
 
 ## Quick Start
 
 ```bash
-# Build workspace
-cargo build --workspace
+# Install via Cargo
+cargo install petaplot
 
-# Run CLI app
-cargo run -p petaplot-cli -- data.arrow
+# Or run locally from workspace
+cargo run -p petaplot -- data.arrow
 ```
 
 ## License
