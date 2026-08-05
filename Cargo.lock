@@ -2697,6 +2697,50 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
 
 [[package]]
+name = "petaplot-cli"
+version = "0.1.0"
+dependencies = [
+ "crossbeam-channel",
+ "eframe",
+ "egui",
+ "egui-wgpu",
+ "petaplot-core",
+ "petaplot-render",
+ "thiserror 2.0.19",
+ "tracing",
+ "tracing-subscriber",
+ "wgpu 23.0.1",
+ "winit",
+]
+
+[[package]]
+name = "petaplot-core"
+version = "0.1.0"
+dependencies = [
+ "arrow-array",
+ "arrow-schema",
+ "bytemuck",
+ "criterion",
+ "crossbeam-channel",
+ "memmap2",
+ "rayon",
+ "thiserror 2.0.19",
+ "tracing",
+]
+
+[[package]]
+name = "petaplot-render"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "petaplot-core",
+ "pollster",
+ "thiserror 2.0.19",
+ "tracing",
+ "wgpu 23.0.1",
+]
+
+[[package]]
 name = "pin-project"
 version = "1.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3404,50 +3448,6 @@ dependencies = [
  "once_cell",
  "rustix 1.1.4",
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "teraplot-cli"
-version = "0.1.0"
-dependencies = [
- "crossbeam-channel",
- "eframe",
- "egui",
- "egui-wgpu",
- "teraplot-core",
- "teraplot-render",
- "thiserror 2.0.19",
- "tracing",
- "tracing-subscriber",
- "wgpu 23.0.1",
- "winit",
-]
-
-[[package]]
-name = "teraplot-core"
-version = "0.1.0"
-dependencies = [
- "arrow-array",
- "arrow-schema",
- "bytemuck",
- "criterion",
- "crossbeam-channel",
- "memmap2",
- "rayon",
- "thiserror 2.0.19",
- "tracing",
-]
-
-[[package]]
-name = "teraplot-render"
-version = "0.1.0"
-dependencies = [
- "bytemuck",
- "pollster",
- "teraplot-core",
- "thiserror 2.0.19",
- "tracing",
- "wgpu 23.0.1",
 ]
 
 [[package]]

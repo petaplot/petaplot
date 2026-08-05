@@ -5,7 +5,7 @@ use wgpu::{
     VertexBufferLayout, VertexFormat, VertexStepMode,
 };
 
-use teraplot_core::compute::simd::MinMaxPair;
+use petaplot_core::compute::simd::MinMaxPair;
 use crate::camera::ViewportCamera;
 
 /// Pipeline de renderizado GPU para el dibujo acelerado de series temporales por instancias.

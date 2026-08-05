@@ -1,13 +1,13 @@
 [package]
-name = "teraplot-cli"
+name = "petaplot-cli"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 
 [dependencies]
-teraplot-core = { workspace = true }
-teraplot-render = { workspace = true }
+petaplot-core = { workspace = true }
+petaplot-render = { workspace = true }
 wgpu = { workspace = true }
 egui = { workspace = true }
 egui-wgpu = { workspace = true }

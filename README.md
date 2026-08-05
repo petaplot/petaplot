@@ -1,9 +1,9 @@
-# TeraPlot
+# PetaPlot
 
-[![CI Status](https://github.com/teraplot/teraplot/workflows/CI/badge.svg)](https://github.com/teraplot/teraplot/actions)
+[![CI Status](https://github.com/petaplot/petaplot/workflows/CI/badge.svg)](https://github.com/petaplot/petaplot/actions)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](#license)
 
-> **TeraPlot** is an open-source, ultra-fast time-series visualizer engineered for terabyte-scale datasets.
+> **PetaPlot** is an open-source, ultra-fast time-series visualizer engineered for terabyte-scale datasets.
 
 ## Key Features
 
@@ -15,11 +15,11 @@
 
 ## Workspace Architecture
 
-TeraPlot is structured as a Rust Workspace (Edition 2024):
+PetaPlot is structured as a Rust Workspace (Edition 2024):
 
-* `crates/teraplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
-* `crates/teraplot-render`: Low-level `wgpu` rendering pipelines, camera uniform buffers, and WGSL line shaders.
-* `crates/teraplot-cli`: Cross-platform desktop application built with `egui`.
+* `crates/petaplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
+* `crates/petaplot-render`: Low-level `wgpu` rendering pipelines, camera uniform buffers, and WGSL line shaders.
+* `crates/petaplot-cli`: Cross-platform desktop application built with `egui`.
 
 ## Quick Start
 
@@ -28,7 +28,7 @@ TeraPlot is structured as a Rust Workspace (Edition 2024):
 cargo build --workspace
 
 # Run CLI app
-cargo run -p teraplot-cli -- data.arrow
+cargo run -p petaplot-cli -- data.arrow
 ```
 
 ## License

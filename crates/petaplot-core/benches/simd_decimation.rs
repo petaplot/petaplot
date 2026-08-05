@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use teraplot_core::compute::simd::reduce_min_max_chunk;
+use petaplot_core::compute::simd::reduce_min_max_chunk;
 
 fn bench_simd_decimation(c: &mut Criterion) {
     let mut group = c.benchmark_group("simd_decimation");

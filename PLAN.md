@@ -1,6 +1,6 @@
-# Plan de Arquitectura e Implementación: TeraPlot
+# Plan de Arquitectura e Implementación: PetaPlot
 
-Este documento define la especificación técnica completa y detallada para el desarrollo de **TeraPlot**: un visor de series temporales de rendimiento extremo (*zero-copy*, latencia sub-milisegundo, renderizado a 60-140+ FPS y soporte para datasets masivos *larger-than-RAM*).
+Este documento define la especificación técnica completa y detallada para el desarrollo de **PetaPlot**: un visor de series temporales de rendimiento extremo (*zero-copy*, latencia sub-milisegundo, renderizado a 60-140+ FPS y soporte para datasets masivos *larger-than-RAM*).
 
 El objetivo de este plan es servir como **especificación técnica directa para agentes de programación y desarrolladores**, cubriendo desde la arquitectura del pipeline de datos hasta la estructura de crates en Rust y los shaders de renderizado.
 
@@ -8,7 +8,7 @@ El objetivo de este plan es servir como **especificación técnica directa para 
 
 ## 1. Visión General del Sistema y Métricas Objetivo
 
-TeraPlot aborda el cuello de botella tradicional de las herramientas de visualización (MATLAB, PlotJuggler, scripts en Python): la dependencia de la memoria RAM y el *overhead* de parseo de archivos.
+PetaPlot aborda el cuello de botella tradicional de las herramientas de visualización (MATLAB, PlotJuggler, scripts en Python): la dependencia de la memoria RAM y el *overhead* de parseo de archivos.
 
 ### Métricas de Rendimiento Objetivo (SLAs)
 
@@ -102,7 +102,7 @@ Para evitar enviar vértices individuales a la GPU en cada frame:
 ## 5. Estructura Completa del Repositorio (Cargo Workspace)
 
 ```text
-teraplot/
+petaplot/
 ├── Cargo.toml
 ├── LICENSE-APACHE
 ├── LICENSE-MIT
@@ -115,7 +115,7 @@ teraplot/
 ├── benches/
 │   └── simd_decimation.rs
 ├── crates/
-│   ├── teraplot-core/
+│   ├── petaplot-core/
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       ├── lib.rs
@@ -132,7 +132,7 @@ teraplot/
 │   │           ├── mod.rs
 │   │           ├── simd.rs
 │   │           └── prefetcher.rs
-│   ├── teraplot-render/
+│   ├── petaplot-render/
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       ├── lib.rs
@@ -142,7 +142,7 @@ teraplot/
 │   │       └── shaders/
 │   │           ├── line.wgsl
 │   │           └── grid.wgsl
-│   └── teraplot-cli/
+│   └── petaplot-cli/
 │       ├── Cargo.toml
 │       └── src/
 │           ├── main.rs
@@ -167,23 +167,23 @@ teraplot/
 [workspace]
 resolver = "2"
 members = [
-    "crates/teraplot-core",
-    "crates/teraplot-render",
-    "crates/teraplot-cli",
+    "crates/petaplot-core",
+    "crates/petaplot-render",
+    "crates/petaplot-cli",
 ]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-authors = ["Fidel Echevarria <contact@teraplot.dev>"]
+authors = ["Fidel Echevarria <contact@petaplot.dev>"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/teraplot/teraplot"
-homepage = "https://teraplot.dev"
+repository = "https://github.com/petaplot/petaplot"
+homepage = "https://petaplot.dev"
 
 [workspace.dependencies]
 # Internas
-teraplot-core = { path = "crates/teraplot-core" }
-teraplot-render = { path = "crates/teraplot-render" }
+petaplot-core = { path = "crates/petaplot-core" }
+petaplot-render = { path = "crates/petaplot-render" }
 
 # Rendimiento e I/O
 memmap2 = "0.9"
@@ -211,7 +211,7 @@ strip = true
 
 ```
 
-### 6.2. Kernel de Decimación SIMD (`crates/teraplot-core/src/compute/simd.rs`)
+### 6.2. Kernel de Decimación SIMD (`crates/petaplot-core/src/compute/simd.rs`)
 
 ```rust
 pub struct MinMaxPair {
@@ -241,7 +241,7 @@ pub fn reduce_min_max_chunk(data: &[f32], bin_size: usize) -> Vec<MinMaxPair> {
 
 ```
 
-### 6.3. Shader WGSL de Renderizado Instanciado (`crates/teraplot-render/src/shaders/line.wgsl`)
+### 6.3. Shader WGSL de Renderizado Instanciado (`crates/petaplot-render/src/shaders/line.wgsl`)
 
 ```wgsl
 struct CameraUniform {
@@ -290,13 +290,13 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 ### 6.4. Plantilla del `README.md` Inicial del Repositorio
 
 ```markdown
-# TeraPlot
+# PetaPlot
 
-[![CI Status](https://github.com/teraplot/teraplot/workflows/CI/badge.svg)](https://github.com/teraplot/teraplot/actions)
-[![Crates.io](https://img.shields.io/crates/v/teraplot-cli.svg)](https://crates.io/crates/teraplot-cli)
+[![CI Status](https://github.com/petaplot/petaplot/workflows/CI/badge.svg)](https://github.com/petaplot/petaplot/actions)
+[![Crates.io](https://img.shields.io/crates/v/petaplot-cli.svg)](https://crates.io/crates/petaplot-cli)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](#license)
 
-> **TeraPlot** is an open-source, ultra-fast time-series visualizer engineered for terabyte-scale datasets.
+> **PetaPlot** is an open-source, ultra-fast time-series visualizer engineered for terabyte-scale datasets.
 
 ## Key Features
 
@@ -310,20 +310,20 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
 ```bash
 # Install via Cargo
-cargo install teraplot-cli
+cargo install petaplot-cli
 
 # Open a massive time-series file
-teraplot telemetry_data.arrow
+petaplot telemetry_data.arrow
 
 ```
 
 ## Architecture Overview
 
-TeraPlot is built as a modular Cargo Workspace:
+PetaPlot is built as a modular Cargo Workspace:
 
-* `teraplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
-* `teraplot-render`: Low-level `wgpu` rendering pipelines and instance buffers.
-* `teraplot-cli`: Cross-platform desktop application built with `egui`.
+* `petaplot-core`: Headless data processing engine, LOD pyramid generation, and SIMD kernels.
+* `petaplot-render`: Low-level `wgpu` rendering pipelines and instance buffers.
+* `petaplot-cli`: Cross-platform desktop application built with `egui`.
 
 ## License
 
@@ -340,12 +340,12 @@ at your option.
 
 ## 7. Fases de Ejecución del Agente de Programación
 
-1. **Fase 1 (Core & Storage):** Implementar `teraplot-core` con la abstracción `mmap`, pruebas unitarias de decimación SIMD en `rayon` y benchmarks de velocidad de lectura con `criterion`.
-2. **Fase 2 (Pipeline de Renderizado):** Crear `teraplot-render` configurando `wgpu`, el shader WGSL para instanciado de líneas y el buffer uniforme de cámara.
-3. **Fase 3 (UI & Integración CLI):** Desarrollar `teraplot-cli` integrando `egui` y coordinando los hilos de I/O y renderizado a través de canales de mensajes `crossbeam-channel`.
+1. **Fase 1 (Core & Storage):** Implementar `petaplot-core` con la abstracción `mmap`, pruebas unitarias de decimación SIMD en `rayon` y benchmarks de velocidad de lectura con `criterion`.
+2. **Fase 2 (Pipeline de Renderizado):** Crear `petaplot-render` configurando `wgpu`, el shader WGSL para instanciado de líneas y el buffer uniforme de cámara.
+3. **Fase 3 (UI & Integración CLI):** Desarrollar `petaplot-cli` integrando `egui` y coordinando los hilos de I/O y renderizado a través de canales de mensajes `crossbeam-channel`.
 4. **Fase 4 (CI/CD):** Configurar GitHub Actions en `.github/workflows/` para compilación y empaquetado automático de binarios en Linux (`.deb`), macOS (`.dmg`) y Windows (`.exe`).
 
-<Elicitation label="Generar la configuración de CI/CD para GitHub Actions" query="Escribe el archivo .github/workflows/ci.yml para compilar y testear TeraPlot automáticamente en Linux, macOS y Windows."/>
-<Elicitation label="Profundizar en la integración de Apache Arrow y mmap" query="¿Cómo implementar el soporte para lectura zero-copy de archivos Apache ArrowIPC en teraplot-core?"/>
+<Elicitation label="Generar la configuración de CI/CD para GitHub Actions" query="Escribe el archivo .github/workflows/ci.yml para compilar y testear PetaPlot automáticamente en Linux, macOS y Windows."/>
+<Elicitation label="Profundizar en la integración de Apache Arrow y mmap" query="¿Cómo implementar el soporte para lectura zero-copy de archivos Apache ArrowIPC en petaplot-core?"/>
 
 ```

@@ -91,9 +91,9 @@ mod tests {
     #[test]
     fn test_mmap_reader_basic() -> Result<()> {
         let temp_dir = std::env::temp_dir();
-        let test_file = temp_dir.join("teraplot_test_mmap.bin");
+        let test_file = temp_dir.join("petaplot_test_mmap.bin");
 
-        let sample_data = b"TeraPlot high performance zero-copy time series data engine.";
+        let sample_data = b"PetaPlot high performance zero-copy time series data engine.";
         {
             let mut file = File::create(&test_file)?;
             file.write_all(sample_data)?;
@@ -102,7 +102,7 @@ mod tests {
         let reader = MmapReader::open(&test_file)?;
         assert_eq!(reader.len(), sample_data.len());
         assert_eq!(reader.as_slice(), sample_data);
-        assert_eq!(reader.as_slice_range(0..8)?, b"TeraPlot");
+        assert_eq!(reader.as_slice_range(0..8)?, b"PetaPlot");
 
         let _ = std::fs::remove_file(&test_file);
         Ok(())

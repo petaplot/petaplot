@@ -9,7 +9,7 @@ impl ControlsUi {
             .resizable(true)
             .default_width(260.0)
             .show(ctx, |ui| {
-                ui.heading("TeraPlot Controls");
+                ui.heading("PetaPlot Controls");
                 ui.separator();
 
                 ui.collapsing("Métricas de Rendimiento", |ui| {

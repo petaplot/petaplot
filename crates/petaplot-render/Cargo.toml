@@ -1,12 +1,12 @@
 [package]
-name = "teraplot-render"
+name = "petaplot-render"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 
 [dependencies]
-teraplot-core = { workspace = true }
+petaplot-core = { workspace = true }
 wgpu = { workspace = true }
 bytemuck = { workspace = true }
 thiserror = { workspace = true }

@@ -1,23 +1,23 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/teraplot-core",
-    "crates/teraplot-render",
-    "crates/teraplot-cli",
+    "crates/petaplot-core",
+    "crates/petaplot-render",
+    "crates/petaplot-cli",
 ]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-authors = ["Fidel Echevarria <contact@teraplot.dev>"]
+authors = ["Fidel Echevarria <contact@petaplot.dev>"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/teraplot/teraplot"
-homepage = "https://teraplot.dev"
+repository = "https://github.com/petaplot/petaplot"
+homepage = "https://petaplot.dev"
 
 [workspace.dependencies]
 # Internas
-teraplot-core = { path = "crates/teraplot-core" }
-teraplot-render = { path = "crates/teraplot-render" }
+petaplot-core = { path = "crates/petaplot-core" }
+petaplot-render = { path = "crates/petaplot-render" }
 
 # Rendimiento e I/O
 memmap2 = "0.9"

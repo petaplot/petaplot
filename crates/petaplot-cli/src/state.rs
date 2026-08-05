@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 use std::time::Instant;
-use teraplot_core::compute::prefetcher::SpeculativePrefetcher;
-use teraplot_core::lod::builder::LodBuilder;
-use teraplot_core::lod::pyramid::LodPyramid;
-use teraplot_render::camera::ViewportCamera;
+use petaplot_core::compute::prefetcher::SpeculativePrefetcher;
+use petaplot_core::lod::builder::LodBuilder;
+use petaplot_core::lod::pyramid::LodPyramid;
+use petaplot_render::camera::ViewportCamera;
 
-/// Estado global de la aplicación `teraplot-cli`.
+/// Estado global de la aplicación `petaplot-cli`.
 pub struct AppState {
     pub file_path: Option<PathBuf>,
     pub pyramid: Option<LodPyramid>,
