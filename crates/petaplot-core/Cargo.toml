@@ -1,9 +1,12 @@
 [package]
 name = "petaplot-core"
+description = "Headless data engine, SIMD decimation, and LOD pyramid builder for PetaPlot."
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
 
 [dependencies]
 memmap2 = { workspace = true }

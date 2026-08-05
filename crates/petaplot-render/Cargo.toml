@@ -1,9 +1,12 @@
 [package]
 name = "petaplot-render"
+description = "Low-level wgpu rendering pipelines and camera transformation engine for PetaPlot."
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
 
 [dependencies]
 petaplot-core = { workspace = true }

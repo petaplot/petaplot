@@ -13,11 +13,13 @@ authors = ["Fidel Echevarria <contact@petaplot.dev>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/petaplot/petaplot"
 homepage = "https://petaplot.dev"
+description = "Ultra-fast, zero-copy time-series visualizer engineered for terabyte-scale datasets."
+readme = "README.md"
 
 [workspace.dependencies]
 # Internas
-petaplot-core = { path = "crates/petaplot-core" }
-petaplot-render = { path = "crates/petaplot-render" }
+petaplot-core = { path = "crates/petaplot-core", version = "0.1.0" }
+petaplot-render = { path = "crates/petaplot-render", version = "0.1.0" }
 
 # Rendimiento e I/O
 memmap2 = "0.9"
