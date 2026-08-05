@@ -75,10 +75,7 @@ impl ControlsUi {
                 ui.separator();
 
                 if ui.button("🔄 Resetear Vista (Zoom 1:1)").clicked() {
-                    if let Some(ref pyramid) = state.pyramid {
-                        state.camera.x_min = 0.0;
-                        state.camera.x_max = pyramid.total_samples as f64;
-                    }
+                    state.reset_view();
                 }
             });
     }

@@ -85,20 +85,28 @@ impl AppState {
             built_pyramid
         };
 
-        self.camera = ViewportCamera::new(0.0, pyramid.total_samples as f64, -2.5, 2.5);
+        let (min_y, max_y) = pyramid.global_min_max();
+        let dy = (max_y - min_y).abs();
+        let margin = if dy > 0.0 { dy * 0.05 } else { 1.0 };
+        let y_min = min_y - margin;
+        let y_max = max_y + margin;
+
+        self.camera = ViewportCamera::new(0.0, pyramid.total_samples as f64, y_min, y_max);
         self.file_path = Some(path.to_path_buf());
         self.pyramid = Some(pyramid);
         self.status_message = format!(
-            "Archivo cargado: {:?} ({} muestras, {} niveles LOD)",
+            "Archivo cargado: {:?} ({} muestras, {} niveles LOD, min={:.2e}, max={:.2e})",
             path.file_name().unwrap_or_default(),
             self.pyramid.as_ref().map_or(0, |p| p.total_samples),
-            self.pyramid.as_ref().map_or(0, |p| p.num_levels())
+            self.pyramid.as_ref().map_or(0, |p| p.num_levels()),
+            min_y,
+            max_y
         );
 
         Ok(())
     }
 
-    /// Carga datos sintéticos de demostración ($100.000$ puntos) para pruebas inmediatas.
+    /// Carga datos sintéticos de demostración ($500.000$ puntos) para pruebas inmediatas.
     pub fn load_demo_dataset(&mut self) {
         let size = 500_000;
         let data: Vec<f32> = (0..size)
@@ -111,9 +119,26 @@ impl AppState {
         let builder = LodBuilder::new().with_factor(10);
         let pyramid = builder.build_from_slice(&data);
 
-        self.camera = ViewportCamera::new(0.0, size as f64, -2.5, 2.5);
+        let (min_y, max_y) = pyramid.global_min_max();
+        let dy = (max_y - min_y).abs();
+        let margin = if dy > 0.0 { dy * 0.05 } else { 1.0 };
+
+        self.camera = ViewportCamera::new(0.0, size as f64, min_y - margin, max_y + margin);
         self.pyramid = Some(pyramid);
         self.status_message = format!("Dataset de prueba cargado (500,000 muestras, {} niveles LOD)", self.pyramid.as_ref().map_or(0, |p| p.num_levels()));
+    }
+
+    /// Resetea la cámara para encuadrar automáticamente todo el dataset en X e Y.
+    pub fn reset_view(&mut self) {
+        if let Some(ref pyramid) = self.pyramid {
+            let (min_y, max_y) = pyramid.global_min_max();
+            let dy = (max_y - min_y).abs();
+            let margin = if dy > 0.0 { dy * 0.05 } else { 1.0 };
+            self.camera.x_min = 0.0;
+            self.camera.x_max = pyramid.total_samples as f64;
+            self.camera.y_min = min_y - margin;
+            self.camera.y_max = max_y + margin;
+        }
     }
 
     /// Registra el tiempo de cada frame para calcular la tasa de refresco FPS estables.
