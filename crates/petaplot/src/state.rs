@@ -1,8 +1,11 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Instant;
 use petaplot_core::compute::prefetcher::SpeculativePrefetcher;
+use petaplot_core::error::Result;
 use petaplot_core::lod::builder::LodBuilder;
+use petaplot_core::lod::cache::LodCache;
 use petaplot_core::lod::pyramid::LodPyramid;
+use petaplot_core::storage::parquet_reader::ParquetReader;
 use petaplot_render::camera::ViewportCamera;
 
 /// Estado global de la aplicación `petaplot`.
@@ -39,6 +42,60 @@ impl Default for AppState {
 impl AppState {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Carga un archivo de datos (Parquet o binario), comprobando primero la caché LOD.
+    pub fn load_file<P: AsRef<Path>>(&mut self, path: P, custom_cache_dir: Option<&Path>) -> Result<()> {
+        let path = path.as_ref();
+        let cache_dir = match custom_cache_dir {
+            Some(p) => p.to_path_buf(),
+            None => LodCache::get_default_cache_dir()?,
+        };
+
+        let cache_file_name = LodCache::compute_cache_key(path);
+        let cache_path = cache_dir.join(cache_file_name);
+
+        let pyramid = if cache_path.exists() {
+            tracing::info!("Caché LOD encontrada en {:?}. Cargando instantáneamente...", cache_path);
+            LodCache::load_from_cache(&cache_path)?
+        } else {
+            tracing::info!("Caché no encontrada. Generando pirámide LOD para {:?}...", path);
+            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_lowercase();
+            let built_pyramid = match ext.as_str() {
+                "parquet" | "pq" => {
+                    let reader = ParquetReader::open(path)?;
+                    let builder = LodBuilder::new().with_factor(10);
+                    builder.build_from_parquet(&reader, None)?
+                }
+                _ => {
+                    let mmap_reader = petaplot_core::storage::mmap_reader::MmapReader::open(path)?;
+                    let bytes = mmap_reader.as_slice();
+                    let floats: &[f32] = bytemuck::cast_slice(bytes);
+                    let builder = LodBuilder::new().with_factor(10);
+                    builder.build_from_slice(floats)
+                }
+            };
+
+            if let Err(e) = LodCache::save_to_cache(&built_pyramid, &cache_path) {
+                tracing::warn!("No se pudo guardar la caché LOD en {:?}: {}", cache_path, e);
+            } else {
+                tracing::info!("Caché LOD guardada exitosamente en {:?}", cache_path);
+            }
+
+            built_pyramid
+        };
+
+        self.camera = ViewportCamera::new(0.0, pyramid.total_samples as f64, -2.5, 2.5);
+        self.file_path = Some(path.to_path_buf());
+        self.pyramid = Some(pyramid);
+        self.status_message = format!(
+            "Archivo cargado: {:?} ({} muestras, {} niveles LOD)",
+            path.file_name().unwrap_or_default(),
+            self.pyramid.as_ref().map_or(0, |p| p.total_samples),
+            self.pyramid.as_ref().map_or(0, |p| p.num_levels())
+        );
+
+        Ok(())
     }
 
     /// Carga datos sintéticos de demostración ($100.000$ puntos) para pruebas inmediatas.

@@ -16,9 +16,20 @@ fn main() -> eframe::Result<()> {
         ..Default::default()
     };
 
+    let args: Vec<String> = std::env::args().collect();
+    let file_to_load = args.get(1).map(std::path::PathBuf::from);
+
     eframe::run_native(
         "PetaPlot",
         native_options,
-        Box::new(|cc| Ok(Box::new(PetaApp::new(cc)))),
+        Box::new(move |cc| {
+            let mut app = PetaApp::new(cc);
+            if let Some(file_path) = file_to_load {
+                if let Err(e) = app.state.load_file(&file_path, None) {
+                    tracing::error!("Error al cargar el archivo desde CLI {:?}: {}", file_path, e);
+                }
+            }
+            Ok(Box::new(app))
+        }),
     )
 }

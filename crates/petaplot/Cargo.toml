@@ -11,6 +11,7 @@ homepage.workspace = true
 [dependencies]
 petaplot-core = { workspace = true }
 petaplot-render = { workspace = true }
+bytemuck = { workspace = true }
 wgpu = { workspace = true }
 egui = { workspace = true }
 egui-wgpu = { workspace = true }

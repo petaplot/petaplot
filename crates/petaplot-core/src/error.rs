@@ -11,6 +11,9 @@ pub enum TeraError {
     #[error("Error al procesar el formato Apache Arrow: {0}")]
     Arrow(String),
 
+    #[error("Error al procesar el formato Apache Parquet: {0}")]
+    Parquet(String),
+
     #[error("Error en la estructura LOD (Nivel de Detalle): {0}")]
     Lod(String),
 

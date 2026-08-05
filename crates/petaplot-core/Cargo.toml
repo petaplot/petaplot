@@ -14,6 +14,8 @@ bytemuck = { workspace = true }
 rayon = { workspace = true }
 arrow-array = { workspace = true }
 arrow-schema = "53.0"
+parquet = { workspace = true }
+dirs = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
 crossbeam-channel = { workspace = true }

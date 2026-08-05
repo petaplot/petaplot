@@ -74,6 +74,12 @@ impl LodBuilder {
 
         pyramid
     }
+
+    /// Construye una pirámide LOD a partir de un archivo Parquet leído a través de `ParquetReader`.
+    pub fn build_from_parquet(&self, parquet_reader: &crate::storage::parquet_reader::ParquetReader, column_name: Option<&str>) -> crate::error::Result<LodPyramid> {
+        let signal_data = parquet_reader.read_signal_column(column_name)?;
+        Ok(self.build_from_slice(&signal_data))
+    }
 }
 
 #[cfg(test)]
