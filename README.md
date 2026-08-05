@@ -24,11 +24,25 @@ PetaPlot is structured as a Rust Workspace (Edition 2024):
 ## Quick Start
 
 ```bash
-# Install via Cargo
-cargo install petaplot
+# Run locally from workspace with synthetic demo
+cargo run -p petaplot
 
-# Or run locally from workspace
-cargo run -p petaplot -- data.arrow
+# Open a Parquet time-series dataset directly
+cargo run -p petaplot -- data.parquet
+```
+
+## Benchmark Datasets (GWOSC Gravitational Wave Data)
+
+PetaPlot includes a script to download public 16 kHz strain data from GWOSC directly into a Parquet file:
+
+```bash
+uv pip install h5py pyarrow numpy gwosc
+
+# Micro-benchmark (GW150914 - ~67 Million points)
+uv run scripts/download_gwosc_parquet.py --preset gw150914 -o gw150914.parquet
+
+# Open with PetaPlot
+cargo run -p petaplot --release -- gw150914.parquet
 ```
 
 ## License
