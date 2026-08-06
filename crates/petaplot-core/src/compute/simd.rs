@@ -43,11 +43,15 @@ pub fn reduce_min_max_chunk(data: &[f32], bin_size: usize) -> Vec<MinMaxPair> {
 
     data.par_chunks(bin_size)
         .map(|chunk| {
-            let mut min_val = f32::MAX;
-            let mut max_val = f32::MIN;
+            let mut min_val = f32::INFINITY;
+            let mut max_val = f32::NEG_INFINITY;
+            let mut valid_count = 0;
 
-            // El compilador autovectoriza este bucle sencillo a instrucciones AVX2 / AVX-512 / NEON
             for &val in chunk {
+                if val.is_nan() {
+                    continue;
+                }
+                valid_count += 1;
                 if val < min_val {
                     min_val = val;
                 }
@@ -56,9 +60,13 @@ pub fn reduce_min_max_chunk(data: &[f32], bin_size: usize) -> Vec<MinMaxPair> {
                 }
             }
 
-            MinMaxPair {
-                min: min_val,
-                max: max_val,
+            if valid_count == 0 {
+                MinMaxPair { min: 0.0, max: 0.0 }
+            } else {
+                MinMaxPair {
+                    min: min_val,
+                    max: max_val,
+                }
             }
         })
         .collect()
@@ -73,11 +81,31 @@ pub fn reduce_min_max_pairs(pairs: &[MinMaxPair], bin_size: usize) -> Vec<MinMax
     pairs
         .par_chunks(bin_size)
         .map(|chunk| {
-            let mut combined = MinMaxPair::identity();
+            let mut min_val = f32::INFINITY;
+            let mut max_val = f32::NEG_INFINITY;
+            let mut valid_count = 0;
+
             for pair in chunk {
-                combined = combined.combine(pair);
+                if pair.min.is_nan() || pair.max.is_nan() {
+                    continue;
+                }
+                valid_count += 1;
+                if pair.min < min_val {
+                    min_val = pair.min;
+                }
+                if pair.max > max_val {
+                    max_val = pair.max;
+                }
             }
-            combined
+
+            if valid_count == 0 {
+                MinMaxPair { min: 0.0, max: 0.0 }
+            } else {
+                MinMaxPair {
+                    min: min_val,
+                    max: max_val,
+                }
+            }
         })
         .collect()
 }

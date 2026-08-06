@@ -67,18 +67,25 @@ impl LodPyramid {
 
     /// Obtiene el rango (min, max) global de la señal a partir del nivel superior de la pirámide LOD.
     pub fn global_min_max(&self) -> (f32, f32) {
-        if let Some(top_level) = self.levels.last() {
-            let mut min_val = f32::INFINITY;
-            let mut max_val = f32::NEG_INFINITY;
-            for pair in &top_level.pairs {
-                if pair.min < min_val { min_val = pair.min; }
-                if pair.max > max_val { max_val = pair.max; }
-            }
-            if min_val.is_finite() && max_val.is_finite() && min_val < max_val {
-                return (min_val, max_val);
+        let mut min_val = f32::INFINITY;
+        let mut max_val = f32::NEG_INFINITY;
+
+        if let Some(level_0) = self.levels.first() {
+            for pair in &level_0.pairs {
+                if !pair.min.is_nan() && pair.min.is_finite() && pair.min < min_val {
+                    min_val = pair.min;
+                }
+                if !pair.max.is_nan() && pair.max.is_finite() && pair.max > max_val {
+                    max_val = pair.max;
+                }
             }
         }
-        (-1.0, 1.0)
+
+        if min_val.is_finite() && max_val.is_finite() && min_val < max_val {
+            (min_val, max_val)
+        } else {
+            (-1.0, 1.0)
+        }
     }
 }
 

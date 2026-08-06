@@ -55,20 +55,17 @@ impl AppState {
         let cache_file_name = LodCache::compute_cache_key(path);
         let cache_path = cache_dir.join(cache_file_name);
 
-        let pyramid = if cache_path.exists() {
-            tracing::info!("Caché LOD encontrada en {:?}. Cargando instantáneamente...", cache_path);
-            LodCache::load_from_cache(&cache_path)?
-        } else {
-            tracing::info!("Caché no encontrada. Generando pirámide LOD para {:?}...", path);
-            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_lowercase();
+        let build_pyramid = |p: &Path| -> Result<LodPyramid> {
+            tracing::info!("Generando pirámide LOD para {:?}...", p);
+            let ext = p.extension().and_then(|e| e.to_str()).unwrap_or("").to_lowercase();
             let built_pyramid = match ext.as_str() {
                 "parquet" | "pq" => {
-                    let reader = ParquetReader::open(path)?;
+                    let reader = ParquetReader::open(p)?;
                     let builder = LodBuilder::new().with_factor(10);
                     builder.build_from_parquet(&reader, None)?
                 }
                 _ => {
-                    let mmap_reader = petaplot_core::storage::mmap_reader::MmapReader::open(path)?;
+                    let mmap_reader = petaplot_core::storage::mmap_reader::MmapReader::open(p)?;
                     let bytes = mmap_reader.as_slice();
                     let floats: &[f32] = bytemuck::cast_slice(bytes);
                     let builder = LodBuilder::new().with_factor(10);
@@ -82,7 +79,23 @@ impl AppState {
                 tracing::info!("Caché LOD guardada exitosamente en {:?}", cache_path);
             }
 
-            built_pyramid
+            Ok(built_pyramid)
+        };
+
+        let pyramid = if cache_path.exists() {
+            match LodCache::load_from_cache(&cache_path) {
+                Ok(p) => {
+                    tracing::info!("Caché LOD cargada instantáneamente desde {:?}", cache_path);
+                    p
+                }
+                Err(e) => {
+                    tracing::warn!("La caché LOD en {:?} no es válida o está desactualizada ({}); recalculando...", cache_path, e);
+                    let _ = std::fs::remove_file(&cache_path);
+                    build_pyramid(path)?
+                }
+            }
+        } else {
+            build_pyramid(path)?
         };
 
         let (min_y, max_y) = pyramid.global_min_max();

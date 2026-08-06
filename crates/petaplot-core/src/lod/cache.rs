@@ -9,7 +9,7 @@ use crate::lod::pyramid::{LodLevel, LodPyramid};
 use crate::storage::mmap_reader::MmapReader;
 
 const MAGIC_HEADER: &[u8; 4] = b"PTPL";
-const CACHE_VERSION: u32 = 1;
+const CACHE_VERSION: u32 = 3;
 
 /// Gestor de persistencia e indexado para la Pirámide LOD en disco (`.lod`).
 pub struct LodCache;

@@ -75,17 +75,49 @@ impl ParquetReader {
                 .index_of(name)
                 .map_err(|_| TeraError::Parquet(format!("Columna '{}' no encontrada en el esquema Parquet", name)))?,
             None => {
-                // Autodetectar primera columna flotante o numérica
+                // 1. Buscar nombres de columna de señal conocidos (strain, value, y, signal, val, data)
+                let known_signal_names = ["strain", "value", "y", "signal", "val", "data", "amplitude"];
                 let mut found = None;
+
                 for (i, field) in schema.fields().iter().enumerate() {
-                    match field.data_type() {
-                        DataType::Float32 | DataType::Float64 => {
-                            found = Some(i);
-                            break;
-                        }
-                        _ => {}
+                    let field_name_lower = field.name().to_lowercase();
+                    if known_signal_names.contains(&field_name_lower.as_str()) {
+                        found = Some(i);
+                        break;
                     }
                 }
+
+                // 2. Si no coincide ningún nombre conocido, buscar la primera columna numérica que NO sea una columna de tiempo/X
+                if found.is_none() {
+                    let time_names = ["timestamp", "time", "t", "x", "date", "datetime"];
+                    for (i, field) in schema.fields().iter().enumerate() {
+                        let name_lower = field.name().to_lowercase();
+                        if time_names.contains(&name_lower.as_str()) {
+                            continue;
+                        }
+                        match field.data_type() {
+                            DataType::Float32 | DataType::Float64 | DataType::Int32 | DataType::Int64 => {
+                                found = Some(i);
+                                break;
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+
+                // 3. Fallback: la primera columna flotante
+                if found.is_none() {
+                    for (i, field) in schema.fields().iter().enumerate() {
+                        match field.data_type() {
+                            DataType::Float32 | DataType::Float64 => {
+                                found = Some(i);
+                                break;
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+
                 found.unwrap_or(0)
             }
         };
